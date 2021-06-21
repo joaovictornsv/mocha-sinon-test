@@ -1,8 +1,12 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 const UserController = require('../src/controllers/UserController')
+const { api } = require('../src/utils/api')
 
 let sandbox = sinon.createSandbox();
+
+// Controller
+const userController = new UserController();
 
 // Mocks
 const requestMock = {
@@ -16,9 +20,12 @@ const responseMock = {
   json() { }
 }
 
-
-
-const userController = new UserController();
+const successReturnMock = {
+  statusCode: 200,
+  data: {
+    id: 1
+  }
+}
 
 describe('UserController', () => {
   beforeEach(() => {
@@ -29,31 +36,24 @@ describe('UserController', () => {
     sandbox.restore();
   })
   it('should get user info', async () => {
-    
-    let returnMock = {
-      statusCode: 200,
-      data: {
-        id: 1
-      }
-    }
- 
-    sandbox.stub(responseMock, 'json').returns(returnMock);
+    sandbox.stub(userController, 'getUserInfo').returns(successReturnMock);
 
     const response = await userController.getUserInfo(requestMock, responseMock);
 
-    expect(response.data).to.equal(returnMock.data);
+    expect(response.data).to.equal(successReturnMock.data);
     expect(response.data).to.haveOwnProperty('id');
 
     expect(response.statusCode).to.equal(200);
   })
 
   it('should be call method json in response', async () => {
+    sandbox.stub(api, 'get').returns(successReturnMock);
+    
     // Spy
     const jsonSpy = sinon.spy(responseMock, 'json');
+    
+    const res = await userController.getUserInfo(requestMock, responseMock);
 
-    await userController.getUserInfo(requestMock, responseMock);
-
-    expect(jsonSpy.called).to.equal(true);
-    expect(jsonSpy.callCount).to.equal(1);
+    expect(jsonSpy.calledOnce).to.equal(true);
   })
 })
