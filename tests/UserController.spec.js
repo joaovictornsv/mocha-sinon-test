@@ -54,6 +54,6 @@ describe('UserController', () => {
     
     const res = await userController.getUserInfo(requestMock, responseMock);
 
-    expect(jsonSpy.calledOnce).to.equal(true);
+    expect(jsonSpy.calledOnce).to.be.true;
   })
 })
