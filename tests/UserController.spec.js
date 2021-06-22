@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
-const UserController = require('../src/controllers/UserController')
-const { api } = require('../src/utils/api')
+const UserController = require('../src/controllers/UserController');
+const { api } = require('../src/utils/api');
 
 let sandbox = sinon.createSandbox();
 
